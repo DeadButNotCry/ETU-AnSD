@@ -5,8 +5,8 @@
 #include "LabOne.h"
 int main() {
     PolynomialMultiplication pm;
-    int num1 = 132;
-    int num2 = 257;
+    int num1 = 231321;
+    int num2 = 1321;
 
     int result = pm.multiply(num1, num2);
 

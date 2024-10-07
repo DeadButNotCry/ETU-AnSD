@@ -39,7 +39,14 @@ private:
                 result[i + j] += poly1[i] * poly2[j];
             }
         }
-
+        for (int i = 0; i < result.size()-1; ++i)
+        {
+	        if(result[i] >= 10)
+	        {
+                result[i + 1] += result[i] / 10;
+                result[i] = result[i] % 10;
+	        }
+        }
         return result;
     }
 
