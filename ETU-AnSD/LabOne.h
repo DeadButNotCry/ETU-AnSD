@@ -1,56 +1,41 @@
 ﻿#pragma once
+#include <vector>
+
 
 class PolynomialMultiplication {
 public:
+    // Публичный метод для умножения двух чисел через умножение многочленов
     int multiply(int num1, int num2) {
         // Преобразуем числа в многочлены
-        int* poly1 = numberToPolynomial(num1);
-        int* poly2 = numberToPolynomial(num2);
+        std::vector<int> poly1 = numberToPolynomial(num1);
+        std::vector<int> poly2 = numberToPolynomial(num2);
 
-        int size1 = getPolynomialSize(num1);
-        int size2 = getPolynomialSize(num2);
+        // Умножаем многочлены
+        std::vector<int> resultPoly = multiplyPolynomials(poly1, poly2);
 
-        int* resultPoly = multiplyPolynomials(poly1, size1, poly2, size2);
-
-        int result = polynomialToNumber(resultPoly, size1 + size2 - 1);
-
-        delete[] poly1;
-        delete[] poly2;
-        delete[] resultPoly;
+        // Преобразуем результат обратно в число
+        int result = polynomialToNumber(resultPoly);
 
         return result;
     }
 
 private:
-    int* numberToPolynomial(int num) {
-        int size = getPolynomialSize(num);
-        int* poly = new int[size];
-        memset(poly, 0, size * sizeof(int));
-
-        for (int i = 0; i < size; ++i) {
-            poly[i] = num % 10;
+    // Метод для преобразования числа в многочлен
+    std::vector<int> numberToPolynomial(int num) {
+        std::vector<int> poly;
+        while (num > 0) {
+            poly.push_back(num % 10);
             num /= 10;
         }
-
         return poly;
     }
 
-    int getPolynomialSize(int num) {
-        int size = 0;
-        while (num > 0) {
-            num /= 10;
-            ++size;
-        }
-        return size;
-    }
+    // Метод для умножения двух многочленов
+    std::vector<int> multiplyPolynomials(const std::vector<int>& poly1, const std::vector<int>& poly2) {
+        std::vector<int> result(poly1.size() + poly2.size() - 1, 0);
 
-    int* multiplyPolynomials(const int* poly1, int size1, const int* poly2, int size2) {
-        int resultSize = size1 + size2 - 1;
-        int* result = new int[resultSize];
-        memset(result, 0, resultSize * sizeof(int));
-
-        for (int i = 0; i < size1; ++i) {
-            for (int j = 0; j < size2; ++j) {
+        for (size_t i = 0; i < poly1.size(); ++i) {
+            for (size_t j = 0; j < poly2.size(); ++j) {
                 result[i + j] += poly1[i] * poly2[j];
             }
         }
@@ -59,12 +44,12 @@ private:
     }
 
     // Метод для преобразования многочлена обратно в число
-    int polynomialToNumber(const int* poly, int size) {
+    int polynomialToNumber(const std::vector<int>& poly) {
         int result = 0;
         int power = 1;
 
-        for (int i = 0; i < size; ++i) {
-            result += poly[i] * power;
+        for (int coeff : poly) {
+            result += coeff * power;
             power *= 10;
         }
 
